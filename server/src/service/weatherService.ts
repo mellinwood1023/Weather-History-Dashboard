@@ -6,15 +6,20 @@ interface coordinates {
 
 }
 // TODO: Define a class for the Weather object
-class Weather {
+class Weather implements fetchWeatherData {
   city: string; 
   temp: number; 
   precipitation: string;
+  dateTime: Date; 
+  windSpeed: number;
   
-  constructor(city: string, temp: number, precipitation: string) {
+  constructor(city: string, temp: number, precipitation: string, dateTime: Date, windSpeed: number) {
     this.city = city; 
     this.temp = temp;
     this.precipitation = precipitation;
+    this.dateTime = dateTime;
+    this.windSpeed = windSpeed; 
+
   }
 
 }
@@ -38,6 +43,14 @@ class WeatherService {
   // private async fetchWeatherData(coordinates: Coordinates) {}
   // TODO: Build parseCurrentWeather method
   // private parseCurrentWeather(response: any) {}
+  private parseCurrentWeather(response: any) {
+    const {list} = response; 
+    const {city, temp, precipitation, date, windSpeed} = list[0];
+
+    return new Weather (
+     
+    )
+    }
   // TODO: Complete buildForecastArray method
   // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
   // TODO: Complete getWeatherForCity method
