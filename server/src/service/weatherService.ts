@@ -11,15 +11,19 @@ class Weather implements Coordinates {
   city: string; 
   temp: number; 
   precipitation: string;
+  icon: string; 
   dateTime: Date; 
   windSpeed: number;
+  humidity: number; 
   
-  constructor(city: string, temp: number, precipitation: string, dateTime: Date, windSpeed: number) {
+  constructor(city: string, temp: number, precipitation: string, icon: string, dateTime: Date, windSpeed: number, humidity: number) {
     this.city = city; 
     this.temp = temp;
     this.precipitation = precipitation;
+    this.icon = icon; 
     this.dateTime = dateTime;
     this.windSpeed = windSpeed; 
+    this.humidity = humidity;
 
   }
 
