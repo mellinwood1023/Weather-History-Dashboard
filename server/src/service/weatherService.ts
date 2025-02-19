@@ -9,22 +9,25 @@ interface Coordinates {
 // TODO: Define a class for the Weather object
 class Weather implements Coordinates {
   city: string; 
-  temp: number; 
+  tempEl: number; 
   precipitation: string;
-  icon: string; 
+  weatherIcon: string; 
   dateTime: Date; 
-  windSpeed: number;
-  humidity: number; 
+  windEl: number;
+  humidityEl: number; 
+  latitude: number;
+  longitude: number;
   
-  constructor(city: string, temp: number, precipitation: string, icon: string, dateTime: Date, windSpeed: number, humidity: number) {
+  constructor(city: string, tempEl: number, precipitation: string, weatherIcon: string, dateTime: Date, windEl: number, humidityEl: number, latitude: number, longitude: number) {
     this.city = city; 
-    this.temp = temp;
+    this.tempEl = tempEl;
     this.precipitation = precipitation;
-    this.icon = icon; 
+    this.weatherIcon = weatherIcon; 
     this.dateTime = dateTime;
-    this.windSpeed = windSpeed; 
-    this.humidity = humidity;
-
+    this.windEl = windEl; 
+    this.humidityEl = humidityEl;
+    this.latitude = latitude; 
+    this.longitude = longitude;
   }
 
 }
