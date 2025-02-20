@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { response } from 'express';
+import { json } from 'node:stream/consumers';
 dotenv.config();
 
 // TODO: Define an interface for the Coordinates object
@@ -69,13 +70,9 @@ private buildWeatherQuery(coordinates: Coordinates): string {
 }
   // TODO: Create fetchAndDestructureLocationData method
  private async fetchAndDestructureLocationData() {
-  //get URL from geocode query
   const url = this.buildGeocodeQuery();
-  //pass URL through fetchlocationdata
   const locationData = await this.fetchLocationData(url);
-  // destructure location data and return it 
   return this.destructureLocationData(locationData);
-
  }
   // TODO: Create fetchWeatherData method
 private async fetchWeatherData(coordinates: Coordinates) {
@@ -84,7 +81,8 @@ private async fetchWeatherData(coordinates: Coordinates) {
 }
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
-    
+    const currentWeather = JSON.parse(`${this.fetchWeatherData}`);
+    return currentWeather();
     }
   // TODO: Complete buildForecastArray method
  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
@@ -97,6 +95,7 @@ async getWeatherForCity(city: string) {
   const coordinates = this.fetchAndDestructureLocationData();
   // recieve coordinates - get weather data using coordinates 
   // format weather data for front end 
+  const forcast = this.buildForecastArray();
   // return weather data
 
 }
