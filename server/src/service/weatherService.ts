@@ -34,23 +34,34 @@ class Weather implements Coordinates {
 
 // TODO: Complete the WeatherService class
 class WeatherService {
+  baseURL: string;
+  apiKey: string; 
+  cityName: string;
 
+  constructor() {
+    this.baseURL = 
+    this.apiKey = 
+    this.cityName = 
+  }
 
   // TODO: Define the baseURL, API key, and city name properties
   // TODO: Create fetchLocationData method
-  // private async fetchLocationData(query: string) {}
+private async fetchLocationData(query: string) {
+  return fetch(query)
+  
+}
   // TODO: Create destructureLocationData method
-  // private destructureLocationData(locationData: Coordinates): Coordinates {}
+private destructureLocationData(locationData: Coordinates): Coordinates {}
   // TODO: Create buildGeocodeQuery method
-  // private buildGeocodeQuery(): string {}
+ private buildGeocodeQuery(): string {}
   // TODO: Create buildWeatherQuery method
-  // private buildWeatherQuery(coordinates: Coordinates): string {}
+private buildWeatherQuery(coordinates: Coordinates): string {}
   // TODO: Create fetchAndDestructureLocationData method
-  // private async fetchAndDestructureLocationData() {}
+ private async fetchAndDestructureLocationData() {}
   // TODO: Create fetchWeatherData method
-  // private async fetchWeatherData(coordinates: Coordinates) {}
+private async fetchWeatherData(coordinates: Coordinates) {}
   // TODO: Build parseCurrentWeather method
-  // private parseCurrentWeather(response: any) {}
+
   private parseCurrentWeather(response: any) {
     const {list} = response; 
     const {city, temp, precipitation, date, windSpeed} = list[0];
@@ -60,9 +71,9 @@ class WeatherService {
     )
     }
   // TODO: Complete buildForecastArray method
-  // private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
+ private buildForecastArray(currentWeather: Weather, weatherData: any[]) {}
   // TODO: Complete getWeatherForCity method
-  // async getWeatherForCity(city: string) {}
+async getWeatherForCity(city: string) {}
 }
 
 export default new WeatherService();
