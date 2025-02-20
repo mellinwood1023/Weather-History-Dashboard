@@ -64,7 +64,7 @@ private destructureLocationData(locationData: Coordinates): Coordinates {
   return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
  }
   // TODO: Create buildWeatherQuery method
-private buildWeatherQuery(coordinates: Coordinates) {
+private buildWeatherQuery(coordinates: Coordinates): string {
   return `${this.baseURL}/data/2.5/forecast?lat={lat}&lon={lon}&appid=${this.apiKey}`
 }
   // TODO: Create fetchAndDestructureLocationData method
@@ -79,17 +79,12 @@ private buildWeatherQuery(coordinates: Coordinates) {
  }
   // TODO: Create fetchWeatherData method
 private async fetchWeatherData(coordinates: Coordinates) {
-
+  let weatherData = await fetch(this.buildWeatherQuery(coordinates))
+  return weatherData.json();
 }
   // TODO: Build parseCurrentWeather method
-
   private parseCurrentWeather(response: any) {
-    // const {list} = response; 
-    //  const {city, temp, precipitation, date, windSpeed} = list[0];
-
-    // return new Weather (
-     
-    // )
+    
     }
   // TODO: Complete buildForecastArray method
  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
