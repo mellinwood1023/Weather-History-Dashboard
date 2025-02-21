@@ -40,8 +40,8 @@ class WeatherService {
   baseURL: string;
   apiKey: string; 
   cityName: string;
-
-  constructor() {
+ 
+  constructor() { 
     this.baseURL = process.env.API_BASE_URL || "";
     this.apiKey = process.env.API_KEY || "";
     this.cityName = "";
@@ -86,14 +86,14 @@ private async fetchWeatherData(coordinates: Coordinates) {
 }
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
-    const { 
-      tempEl: currentTemp, 
-      windEl: currentWind, 
-      precipitation: precipitation,
-      humidityEl: humidity,
-      weatherIcon: icon
-    } = currentWeather;
-  
+    const currentTemp = response.main.temp;
+    const maxTemp = response.main.temp_max;
+    const minTemp = response.main.temp_min;
+    const feelsLike = response.main.feels_like;
+    const currentWind = response.wind.speed;
+    const precipitation = response.rain ? response.rain['1h'] : 0;
+    const humidity = response.main.humidity;
+    const icon = response.weather[0].icon;
 
     return {
       currentTemp: Math.round(currentTemp),
@@ -121,7 +121,7 @@ async getWeatherForCity(city: string) {
   const coordinates = this.fetchAndDestructureLocationData();
   // recieve coordinates - get weather data using coordinates 
   // format weather data for front end 
-  const forcast = this.buildForecastArray();
+  const forcast = this.buildForecastArray(this.parseCurrentWeather, weatherData);
   // return weather data
   const parseDailyWeather({ daily, currentWeather }) => {
   return daily.time.map((time, index) => {
