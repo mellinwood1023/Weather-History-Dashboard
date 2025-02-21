@@ -19,14 +19,13 @@ class HistoryService implements City {
   
   // TODO: Define a read method that reads from the searchHistory.json file
  private async read() {
-  const fetchData = () => {
-    try{
-      const res = fetch(SearchHistory.join());
-      const data = await res.(JSON.parse());
-    } catch(err){
-      console.log(err);
-    }
-  } 
+    const renderSearchHistory: fetch('../routes/searchHistory/searchHistory.json'); {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    return renderSearchHistory();
   return fetchData();
  }
   // TODO: Define a write method that writes the updated cities array to the searchHistory.json file

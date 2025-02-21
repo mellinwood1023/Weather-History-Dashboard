@@ -3,6 +3,10 @@
     {
         "city": "object",
         "state": "string"
+    },
+    {
+        "city": "Nashua",
+        "state": "New Hampshire"
     }
 ]
 }
