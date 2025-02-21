@@ -86,7 +86,9 @@ private async fetchWeatherData(coordinates: Coordinates) {
     }
   // TODO: Complete buildForecastArray method
  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
+    const forecasts = weatherData[0].list;
 
+    const forecastArray: Weather[] = forecasts.filter(())
  }
   // TODO: Complete getWeatherForCity method
 async getWeatherForCity(city: string) {
