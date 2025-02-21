@@ -123,7 +123,7 @@ async getWeatherForCity(city: string) {
   // format weather data for front end 
   const forcast = this.buildForecastArray();
   // return weather data
-  const parseDailyWeather({ daily, currentWeather }) {
+  const parseDailyWeather({ daily, currentWeather }) => {
   return daily.time.map((time, index) => {
   return {
     timestamp: time * 1000, 
