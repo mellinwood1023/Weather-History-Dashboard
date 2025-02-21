@@ -16,9 +16,12 @@ class HistoryService implements City {
   // TODO: Define a read method that reads from the searchHistory.json file
  private async read() {
   const filePath = path.join(__dirname, './data/searchHistory.json');
+  return filePath("", City);
  }
   // TODO: Define a write method that writes the updated cities array to the searchHistory.json file
-private async write(cities: City[]) {}
+private async write(cities: City[]) {
+  
+}
   // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
 async getCities() {}
   // TODO Define an addCity method that adds a city to the searchHistory.json file

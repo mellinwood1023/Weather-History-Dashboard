@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { response } from 'express';
+import { parse } from 'node:path';
 import { json } from 'node:stream/consumers';
 dotenv.config();
 
@@ -77,18 +78,41 @@ private buildWeatherQuery(coordinates: Coordinates): string {
   // TODO: Create fetchWeatherData method
 private async fetchWeatherData(coordinates: Coordinates) {
   let weatherData = await fetch(this.buildWeatherQuery(coordinates))
-  return weatherData.json();
+  return weatherData.json(data)(
+    current: this.parseCurrentWeather(data),
+    daily: this.parseDailyWeather(data),
+    // hourly: this.parseHourlyWeather(data)
+  )
 }
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
-    const currentWeather = JSON.parse(`${this.fetchWeatherData}`);
-    return currentWeather();
+    const { 
+      tempEl: currentTemp, 
+      windEl: currentWind, 
+      precipitation: precipitation,
+      humidityEl: humidity,
+      weatherIcon: icon
+    } = currentWeather;
+  
+
+    return {
+      currentTemp: Math.round(currentTemp),
+      highTemp: Math.round(maxTemp), 
+      lowTemp: Math.round(minTemp), 
+      feelsLike: Math.round(feelsLike),
+      currentWind: Math.round(currentWind), 
+      precipitation: Math.round(precipitation * 100) / 100, 
+      humidity: Math.round(humidity),
+      icon,
     }
+  }
   // TODO: Complete buildForecastArray method
  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
     const forecasts = weatherData[0].list;
 
-    const forecastArray: Weather[] = forecasts.filter(())
+    const forecastArray: Weather[] = forecasts.filter(
+      
+    )
  }
   // TODO: Complete getWeatherForCity method
 async getWeatherForCity(city: string) {
@@ -99,7 +123,17 @@ async getWeatherForCity(city: string) {
   // format weather data for front end 
   const forcast = this.buildForecastArray();
   // return weather data
+  const parseDailyWeather({ daily, currentWeather }) {
+  return daily.time.map((time, index) => {
+  return {
+    timestamp: time * 1000, 
+    icon: daily.weatherIcon[index],
+    maxTemp: Math.round(daily.tempEl_2m_max[index])
+   }}
+  )}
+  // const parseHourlyWeather ({ hourly, currentWeather }) {
 
+  // }
 }
 }
 
