@@ -12,8 +12,8 @@ const PORT = process.env.PORT || 3001;
 // TODO: Serve static files of entire client dist folder
 app.use('/client', express.static('routes/searchHistory/searchHistory'));
 // TODO: Implement middleware for parsing JSON and urlencoded form data
-app.use(PORT.urlencoded({ extended: true}));
-app.use(PORT.JSON());
+app.use(express.urlencoded({ extended: true}));
+app.use(express.json({limit: '50 mb'}));
 // TODO: Implement middleware to connect the routes
 app.use(routes);
 
