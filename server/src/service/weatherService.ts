@@ -123,18 +123,34 @@ async getWeatherForCity(city: string) {
   // format weather data for front end 
   const forcast = this.buildForecastArray(this.parseCurrentWeather, weatherData);
   // return weather data
-  const parseDailyWeather({ daily, currentWeather }) => {
-  return daily.time.map((time, index) => {
-  return {
-    timestamp: time * 1000, 
-    icon: daily.weatherIcon[index],
-    maxTemp: Math.round(daily.tempEl_2m_max[index])
+  private parseDailyWeather(response: any) {
+    return response.list.map((entry: any) => {
+      return {
+        dateTime: new Date(entry.dt * 1000),
+        tempEl: entry.main.temp,
+        precipitation: entry.rain ? entry.rain['3h'] : 0,
+        weatherIcon: entry.weather[0].icon,
+        windEl: entry.wind.speed,
+        humidityEl: entry.main.humidity,
+      };
+    });
+  }
+
+  private parseDailyWeatherData(daily: any, currentWeather: any) {
+    return daily.time.map((time: any, index: any) => {
+      return {
+        timestamp: time * 1000,
+        icon: daily.weatherIcon[index],
+        maxTemp: Math.round(daily.tempEl_2m_max[index]),
+      };
+    });
+  }
    }}
-  )}
+
   // const parseHourlyWeather ({ hourly, currentWeather }) {
 
   // }
-}
-}
+
+
 
 export default new WeatherService();
