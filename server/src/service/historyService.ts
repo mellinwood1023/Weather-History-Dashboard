@@ -59,8 +59,11 @@ class HistoryService implements City {
   // TODO Define an addCity method that adds a city to the searchHistory.json file
   async addCity(city: City): Promise<void> {
     const cities = await this.getCities();
-    cities.push(city);
-    await this.write(cities);
+    const cityExists = cities.some(c => c.city === city.city && c.state === city.state);
+    if (!cityExists) {
+      cities.push(city);
+      await this.write(cities);
+    } 
   }
   // * BONUS TODO: Define a removeCity method that removes a city from the searchHistory.json file
 

@@ -109,11 +109,9 @@ private async fetchWeatherData(coordinates: Coordinates) {
   // TODO: Complete buildForecastArray method
  private buildForecastArray(currentWeather: Weather, weatherData: any[]) {
     const forecasts = weatherData[0].list;
-
-    const forecastArray: Weather[] = forecasts.filter(
-      
+    const forecastArray: Weather[] = forecasts.filter(  
     )
- }
+  }
   // TODO: Complete getWeatherForCity method
 async getWeatherForCity(city: string) {
   this.cityName = city;
@@ -139,9 +137,9 @@ async getWeatherForCity(city: string) {
   private parseDailyWeatherData(daily: any, currentWeather: any) {
     return daily.time.map((time: any, index: any) => {
       return {
-        timestamp: time * 1000,
-        icon: daily.weatherIcon[index],
-        maxTemp: Math.round(daily.tempEl_2m_max[index]),
+      timestamp: time * 1000,
+      icon: daily.weatherIcon[index],
+      maxTemp: Math.round(daily.tempEl_2m_max[index]),
       };
     });
   }
