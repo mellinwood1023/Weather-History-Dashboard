@@ -4,6 +4,7 @@ import { parse } from 'node:path';
 import { json } from 'node:stream/consumers';
 dotenv.config();
 
+const apiKey = process.env.API_KEY;
 // TODO: Define an interface for the Coordinates object
 interface Coordinates {
   latitude: number, 
