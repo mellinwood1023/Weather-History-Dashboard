@@ -7,9 +7,9 @@ import WeatherService from '../../service/weatherService.js';
 // TODO: POST Request with city name to retrieve weather data
 router.post('/', (req: Request, res: Response) => {
   try {
-    const { city } = req.body;
-    if (!city) {
-      return res.status(400).json({ error: 'Please enter city name' });
+    const { city, state } = req.body;
+    if (!city || !state) {
+      return res.status(400).json({ error: 'Please enter city and state' });
     }
 
    WeatherService.getWeatherForCity(city)
@@ -21,6 +21,9 @@ router.post('/', (req: Request, res: Response) => {
         console.error('Error fetching weather data:', error);
         res.status(500).json({ error: 'Error fetching weather data' });
       }); 
+  } catch (error) {
+    console.error('Error in POST /:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
   // TODO: GET weather data from city name
   // TODO: save city to search history

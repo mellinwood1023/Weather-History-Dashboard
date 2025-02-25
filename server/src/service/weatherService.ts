@@ -92,9 +92,6 @@ private async fetchWeatherData(coordinates: Coordinates) {
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
     const currentTemp = response.main.temp;
-    const maxTemp = response.main.temp_max;
-    const minTemp = response.main.temp_min;
-    const feelsLike = response.main.feels_like;
     const currentWind = response.wind.speed;
     const precipitation = response.rain ? response.rain['1h'] : 0;
     const humidity = response.main.humidity;
@@ -145,15 +142,14 @@ private async fetchWeatherData(coordinates: Coordinates) {
   }
   // TODO: Complete getWeatherForCity method
   async getWeatherForCity(city: string) {
+   try { 
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates); 
     const forecast = this.buildForecastArray(
       this.parseCurrentWeather(weatherData.current),  weatherData.daily || []
     );
-    // const forecast = this.parseDailyWeather(weatherData.daily);
-    // const hourlyForecast = this.parseHourlyWeather(weatherData.hourly);
-    // const currentWeather = this.parseCurrentWeather(weatherData.current);
+
     return {
       city: this.cityName,
       current: weatherData.current,
@@ -163,6 +159,7 @@ private async fetchWeatherData(coordinates: Coordinates) {
     console.error("Error fetching weather data:", error);
     throw new Error("Could not retrieve weather data");
   }
+}
 
   static getWeatherData(city: string) {
     const weatherService = new WeatherService();

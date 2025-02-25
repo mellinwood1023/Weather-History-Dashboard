@@ -51,7 +51,8 @@ class HistoryService {
     const cities = await this.getCities();
     const cityExists = cities.some(c => c.city === city.city && c.state === city.state);
     if (!cityExists) {
-      cities.push(city);
+      const newCity = new City(city.city, city.state, uuidv4());
+      cities.push(newCity);
       await this.write(cities);
     } 
   }
