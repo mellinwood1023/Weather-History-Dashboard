@@ -30,7 +30,7 @@ API: OpenWeather API for weather data
 
 Clone the repository:
 
-git clone https://github.com/your-username/weather-history-dashboard.git
+git clone https://github.com/mellinwood1023/weather-history-dashboard.git
 cd weather-history-dashboard
 
 Install dependencies:
