@@ -12,7 +12,7 @@ router.post('/', (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Please enter city name' });
     }
 
-   WeatherService.getWeatherData(city)
+   WeatherService.getWeatherForCity(city)
       .then(async (weatherData) => {
         await HistoryService.addCity(city);
         res.status(200).json(weatherData);
@@ -29,11 +29,11 @@ router.post('/', (req: Request, res: Response) => {
 // TODO: GET search history
 router.get('/history', async (req: Request, res: Response) => {
   try {
-    const history = await HistoryService.getHistory();
+    const history = await HistoryService.getCities();
     res.status(200).json(history);
   } catch (error) {
-    console.error('Error fetching search history:', error);
-    res.status(500).json({ error: 'Failed to retrieve search history' });
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Search history failed' });
   }
 });
 
@@ -45,12 +45,12 @@ router.delete('/history/:id', async (req: Request, res: Response) => {
     if (!id) {
       return res.status(400).json({ error: 'City ID is required' });
     }
-    await HistoryService.removeHistory(id);
+    await HistoryService.removeCity(id);
 
-    res.status(200).json({ message: 'City deleted from search history' });
+    res.status(200).json({ message: 'City deleted' });
   } catch (error) {
-    console.error('Error deleting city from history:', error);
-    res.status(500).json({ error: 'Failed to delete city from history' });
+    console.error('Error on deletion:', error);
+    res.status(500).json({ error: 'Failed' });
   }
 });
 

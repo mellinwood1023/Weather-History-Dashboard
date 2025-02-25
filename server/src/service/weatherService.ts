@@ -154,7 +154,6 @@ private async fetchWeatherData(coordinates: Coordinates) {
     // const forecast = this.parseDailyWeather(weatherData.daily);
     // const hourlyForecast = this.parseHourlyWeather(weatherData.hourly);
     // const currentWeather = this.parseCurrentWeather(weatherData.current);
-  
     return {
       city: this.cityName,
       current: weatherData.current,
@@ -163,6 +162,11 @@ private async fetchWeatherData(coordinates: Coordinates) {
   } catch (error: unknown) {
     console.error("Error fetching weather data:", error);
     throw new Error("Could not retrieve weather data");
+  }
+
+  static getWeatherData(city: string) {
+    const weatherService = new WeatherService();
+    return weatherService.getWeatherForCity(city);
   }
 }
 
