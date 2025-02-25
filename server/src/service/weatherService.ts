@@ -100,16 +100,17 @@ private async fetchWeatherData(coordinates: Coordinates) {
     const humidity = response.main.humidity;
     const icon = response.weather[0].icon;
 
-    return {
-      currentTemp: Math.round(currentTemp),
-      highTemp: Math.round(maxTemp), 
-      lowTemp: Math.round(minTemp), 
-      feelsLike: Math.round(feelsLike),
-      currentWind: Math.round(currentWind), 
-      precipitation: Math.round(precipitation * 100) / 100, 
-      humidity: Math.round(humidity),
+    return new Weather(
+      this.cityName,
+      Math.round(currentTemp),
+      precipitation ? `${Math.round(precipitation * 100) / 100} mm` : 'No Rain',
       icon,
-    }
+      new Date(),
+      Math.round(currentWind),
+      Math.round(humidity),
+      0, 
+      0  
+    );
   }
    // TODO: Complete buildForecastArray method 
   private buildForecastArray(currentWeather: Weather, weatherData: any) {
@@ -154,17 +155,16 @@ private async fetchWeatherData(coordinates: Coordinates) {
     // const hourlyForecast = this.parseHourlyWeather(weatherData.hourly);
     // const currentWeather = this.parseCurrentWeather(weatherData.current);
   
-  return {
-    city: this.cityName,
-    current: weatherData.current,
-    forecast: forecast,
-  };
-
-} catch (error) {
-  console.error("Error fetching weather data:", error);
-  throw new Error("Could not retrieve weather data");
-}
+    return {
+      city: this.cityName,
+      current: weatherData.current,
+      forecast: forecast,
+    };
+  } catch (error: unknown) {
+    console.error("Error fetching weather data:", error);
+    throw new Error("Could not retrieve weather data");
   }
+}
 
 
 
