@@ -7,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 // TODO: Serve static files of entire client dist folder
 app.use('/client', express.static(__dirname + '/client/dist'));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
 // TODO: Implement middleware for parsing JSON and urlencoded form data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '50 mb' }));
@@ -14,3 +15,6 @@ app.use(express.json({ limit: '50 mb' }));
 app.use('/api', routes);
 // Start the server on the port
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
