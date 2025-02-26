@@ -22,7 +22,16 @@ class Weather implements Coordinates {
   latitude: number;
   longitude: number;
   
-  constructor(city: string, tempEl: number, precipitation: string, weatherIcon: string, dateTime: Date, windEl: number, humidityEl: number, latitude: number, longitude: number) {
+  constructor(
+    city: string, 
+    tempEl: number, 
+    precipitation: string, 
+    weatherIcon: string, 
+    dateTime: Date, 
+    windEl: number, 
+    humidityEl: number, 
+    latitude: number, 
+    longitude: number) {
     this.city = city; 
     this.tempEl = tempEl;
     this.precipitation = precipitation;
@@ -34,6 +43,54 @@ class Weather implements Coordinates {
     this.longitude = longitude;
   }
 
+  static fromJSON(json: any): Weather {
+    return new Weather(
+      json.city,
+      json.tempEl,
+      json.precipitation,
+      json.weatherIcon,
+      new Date(json.dateTime),
+      json.windEl,
+      json.humidityEl,
+      json.latitude,
+      json.longitude
+    );
+  }
+  toJSON(): any {
+    return {
+      city: this.city,
+      tempEl: this.tempEl,
+      precipitation: this.precipitation,
+      weatherIcon: this.weatherIcon,
+      dateTime: this.dateTime.toISOString(),
+      windEl: this.windEl,
+      humidityEl: this.humidityEl,
+      latitude: this.latitude,
+      longitude: this.longitude
+    };
+  }
+  toString(): string {
+    return `City: ${this.city}, Temp: ${this.tempEl}°C, Precipitation: ${this.precipitation}, Weather Icon: ${this.weatherIcon}, Date: ${this.dateTime.toISOString()}, Wind: ${this.windEl} m/s, Humidity: ${this.humidityEl}%, Latitude: ${this.latitude}, Longitude: ${this.longitude}`;
+  }
+  toObject(): Coordinates {
+    return {
+      latitude: this.latitude,
+      longitude: this.longitude
+    };
+  }
+  toArray(): (string | number)[] {
+    return [
+      this.city,
+      this.tempEl,
+      this.precipitation,
+      this.weatherIcon,
+      this.dateTime.toISOString(),
+      this.windEl,
+      this.humidityEl,
+      this.latitude,
+      this.longitude
+    ];
+  }
 }
 
 // TODO: Complete the WeatherService class
@@ -56,18 +113,19 @@ class WeatherService {
  .then(response => response.json())
  .then(data => {return data})
  .catch(error => console.log(error));
+ 
 }
 // TODO: Create destructureLocationData method
-private destructureLocationData(locationData: Coordinates): Coordinates {
+  private destructureLocationData(locationData: Coordinates): Coordinates {
     const { latitude, longitude } = locationData;
-    return {latitude, longitude};
+    return { latitude, longitude };
 }
   // TODO: Create buildGeocodeQuery method
- private buildGeocodeQuery() {
+  private buildGeocodeQuery() {
   return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
  }
   // TODO: Create buildWeatherQuery method
-private buildWeatherQuery(coordinates: Coordinates): string {
+  private buildWeatherQuery(coordinates: Coordinates): string {
   return `${this.baseURL}/data/2.5/forecast?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${this.apiKey}`;
 }
   // TODO: Create fetchAndDestructureLocationData method
@@ -78,27 +136,37 @@ private buildWeatherQuery(coordinates: Coordinates): string {
       throw new Error("Location data not found.");
     }
     return this.destructureLocationData(locationDataArray[0]); 
+
+  // const coordinates = this.destructureLocationData(locationDataArray[0]);
+  // return coordinates;
   }
   // TODO: Create fetchWeatherData method
-private async fetchWeatherData(coordinates: Coordinates) {
+  private async fetchWeatherData(coordinates: Coordinates) {
   console.log(coordinates);
   let response = await fetch(this.buildWeatherQuery(coordinates))
   let data = await response.json();
-
+  console.log(data);
+  if (!data || !data.list) {
+    throw new Error("Weather data not found.");
+  }
+  const currentWeather = this.parseCurrentWeather(data);
+  const dailyWeather = this.parseDailyWeather(data);
   return {
-    current: this.parseCurrentWeather(data),
-    daily: this.parseDailyWeather(data),
-    // hourly: this.parseHourlyWeather(data)
+    current: currentWeather,
+    daily: dailyWeather,
   };
 }
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
-    console.log(response);
-    const currentTemp = response.main.temp;
-    const currentWind = response.wind.speed;
-    const precipitation = response.rain ? response.rain['1h'] : 0;
-    const humidity = response.main.humidity;
-    const icon = response.weather[0].icon;
+    const {list} = response;
+    const { main, weather, wind, rain } = list[0].main;
+    const currentTemp = main.temp;
+    const currentWind = wind.speed;
+    const precipitation = rain ? rain['1h'] : 0;
+    const humidity = main.humidity;
+    const icon = weather[0].icon;
+    const latitude = response.city.coord.lat;
+    const longitude = response.city.coord.lon;
 
     return new Weather(
       this.cityName,
@@ -108,8 +176,8 @@ private async fetchWeatherData(coordinates: Coordinates) {
       new Date(),
       Math.round(currentWind),
       Math.round(humidity),
-      0, 
-      0  
+      response.locationData.latitude,
+      response.locationData.longitude  
     );
   }
    // TODO: Complete buildForecastArray method 
@@ -169,9 +237,5 @@ private async fetchWeatherData(coordinates: Coordinates) {
     return weatherService.getWeatherForCity(city);
   }
 }
-
-
-
-
 
 export default new WeatherService();
