@@ -1,13 +1,14 @@
 import dotenv from 'dotenv';
 import { response } from 'express';
 import { parse } from 'node:path';
-import { json } from 'node:stream/consumers';
+// import { json } from 'node:stream/consumers';
 dotenv.config();
+
 
 // TODO: Define an interface for the Coordinates object
 interface Coordinates {
-  latitude: number, 
-  longitude: number, 
+  latitude: number; 
+  longitude: number; 
 }
 // TODO: Define a class for the Weather object
 class Weather implements Coordinates {
@@ -100,7 +101,7 @@ private async fetchWeatherData(coordinates: Coordinates) {
     return new Weather(
       this.cityName,
       Math.round(currentTemp),
-      precipitation ? `${Math.round(precipitation * 100) / 100} mm` : 'No Rain',
+      precipitation ? `${Math.round(precipitation * 100) / 100} mm` : 'Sunny',
       icon,
       new Date(),
       Math.round(currentWind),
@@ -146,9 +147,8 @@ private async fetchWeatherData(coordinates: Coordinates) {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates); 
-    const forecast = this.buildForecastArray(
-      this.parseCurrentWeather(weatherData.current),  weatherData.daily || []
-    );
+    const forecast = this.buildForecastArray(weatherData.current,  weatherData.daily) || []
+    ;
 
     return {
       city: this.cityName,
