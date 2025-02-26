@@ -81,6 +81,7 @@ private buildWeatherQuery(coordinates: Coordinates): string {
   }
   // TODO: Create fetchWeatherData method
 private async fetchWeatherData(coordinates: Coordinates) {
+  console.log(coordinates);
   let response = await fetch(this.buildWeatherQuery(coordinates))
   let data = await response.json();
 
@@ -92,6 +93,7 @@ private async fetchWeatherData(coordinates: Coordinates) {
 }
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
+    console.log(response);
     const currentTemp = response.main.temp;
     const currentWind = response.wind.speed;
     const precipitation = response.rain ? response.rain['1h'] : 0;
@@ -112,6 +114,7 @@ private async fetchWeatherData(coordinates: Coordinates) {
   }
    // TODO: Complete buildForecastArray method 
   private buildForecastArray(currentWeather: Weather, weatherData: any) {
+    console.log(weatherData);
     const forecasts = weatherData.list || []; 
     return forecasts.map((entry: any) => new Weather(
         this.cityName,

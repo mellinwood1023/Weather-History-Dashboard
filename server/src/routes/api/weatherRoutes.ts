@@ -1,20 +1,23 @@
 import { Router, type Request, type Response } from 'express';
 const router = Router();
 
+
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
 
 // TODO: POST Request with city name to retrieve weather data
+//@ts-ignore
 router.post('/', (req: Request, res: Response) => {
   try {
-    const { city, state } = req.body;
-    if (!city || !state) {
-      return res.status(400).json({ error: 'Please enter city and state' });
+    console.log('Received request:', req.body);
+    const {cityName} = req.body;
+    if (!cityName) {
+      return res.status(400).json({ error: 'Please enter city' });
     }
 
-   WeatherService.getWeatherForCity(city)
+   WeatherService.getWeatherForCity(cityName)
       .then(async (weatherData) => {
-        await HistoryService.addCity(city);
+        await HistoryService.addCity(cityName);
         res.status(200).json(weatherData);
       })
       .catch((error) => {
@@ -41,6 +44,7 @@ router.get('/history', async (req: Request, res: Response) => {
 });
 
 // * BONUS TODO: DELETE city from search history
+// @ts-ignore
 router.delete('/history/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
