@@ -20,6 +20,7 @@ class Weather implements Coordinates {
   dateTime: Date; 
   wind: number;
   humidity: number; 
+  rain: number;
   visibility: number;
   lat: number;
   lon: number;
@@ -33,6 +34,7 @@ class Weather implements Coordinates {
     dateTime: Date, 
     wind: number, 
     humidity: number, 
+    rain: number,
     visibility: number,
     lat: number, 
     lon: number) {
@@ -44,6 +46,7 @@ class Weather implements Coordinates {
     this.dateTime = dateTime;
     this.wind = wind; 
     this.humidity = humidity;
+    this.rain = rain;
     this.visibility = visibility;
     this.lat = lat; 
     this.lon = lon;
@@ -122,21 +125,27 @@ class WeatherService {
     const { temp, speed, rain, humidity } = list[0].main;
     const currentTemp = temp;
     const currentWind = speed;
-    const precipitation = rain ? rain['1h'] : 0;
-    const icon = list[0].weather.icon;
+    const icon = list[0].weather[0].icon;
+    const currentRain = rain;
+    const currentHumidity = humidity;
+    console.log("current temp: ", currentTemp);
+    console.log("current wind: ", currentWind);
+    console.log("current rain: ", currentRain);
+    console.log("current humidity: ", currentHumidity);
 
     return new Weather(
       this.cityName,
-      response.weather,
+      list[0].weather,
       currentTemp,
-      response.main.feels_like,
+      list[0].main.feels_like,
       icon,
-      new Date(response.dt * 1000),
+      new Date(list[0].dt * 1000),
       currentWind,
-      humidity,
-      response.visibility,
-      response.coord.lat,
-      response.coord.lon
+      currentHumidity,
+      currentRain ? currentRain['1h'] : 0,
+      list[0].visibility,
+      list[0].coord.lat,
+      list[0].coord.lon
     );
   }
    // TODO: Complete buildForecastArray method 
@@ -152,6 +161,7 @@ class WeatherService {
         new Date(entry.dt * 1000),
         entry.wind.speed,
         entry.main.humidity,
+        entry.rain ? entry.rain['1h'] : 0,
         entry.visibility,
         entry.coord.lat,
         entry.coord.lon
