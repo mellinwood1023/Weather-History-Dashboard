@@ -7,8 +7,8 @@ dotenv.config();
 
 // TODO: Define an interface for the Coordinates object
 interface Coordinates {
-  latitude: number; 
-  longitude: number; 
+  lat: number; 
+  lon: number; 
 }
 // TODO: Define a class for the Weather object
 class Weather implements Coordinates {
@@ -19,8 +19,8 @@ class Weather implements Coordinates {
   dateTime: Date; 
   windEl: number;
   humidityEl: number; 
-  latitude: number;
-  longitude: number;
+  lat: number;
+  lon: number;
   
   constructor(
     city: string, 
@@ -30,8 +30,8 @@ class Weather implements Coordinates {
     dateTime: Date, 
     windEl: number, 
     humidityEl: number, 
-    latitude: number, 
-    longitude: number) {
+    lat: number, 
+    lon: number) {
     this.city = city; 
     this.tempEl = tempEl;
     this.precipitation = precipitation;
@@ -39,58 +39,10 @@ class Weather implements Coordinates {
     this.dateTime = dateTime;
     this.windEl = windEl; 
     this.humidityEl = humidityEl;
-    this.latitude = latitude; 
-    this.longitude = longitude;
+    this.lat = lat; 
+    this.lon = lon;
   }
 
-  static fromJSON(json: any): Weather {
-    return new Weather(
-      json.city,
-      json.tempEl,
-      json.precipitation,
-      json.weatherIcon,
-      new Date(json.dateTime),
-      json.windEl,
-      json.humidityEl,
-      json.latitude,
-      json.longitude
-    );
-  }
-  toJSON(): any {
-    return {
-      city: this.city,
-      tempEl: this.tempEl,
-      precipitation: this.precipitation,
-      weatherIcon: this.weatherIcon,
-      dateTime: this.dateTime.toISOString(),
-      windEl: this.windEl,
-      humidityEl: this.humidityEl,
-      latitude: this.latitude,
-      longitude: this.longitude
-    };
-  }
-  toString(): string {
-    return `City: ${this.city}, Temp: ${this.tempEl}°C, Precipitation: ${this.precipitation}, Weather Icon: ${this.weatherIcon}, Date: ${this.dateTime.toISOString()}, Wind: ${this.windEl} m/s, Humidity: ${this.humidityEl}%, Latitude: ${this.latitude}, Longitude: ${this.longitude}`;
-  }
-  toObject(): Coordinates {
-    return {
-      latitude: this.latitude,
-      longitude: this.longitude
-    };
-  }
-  toArray(): (string | number)[] {
-    return [
-      this.city,
-      this.tempEl,
-      this.precipitation,
-      this.weatherIcon,
-      this.dateTime.toISOString(),
-      this.windEl,
-      this.humidityEl,
-      this.latitude,
-      this.longitude
-    ];
-  }
 }
 
 // TODO: Complete the WeatherService class
@@ -109,24 +61,29 @@ class WeatherService {
   // TODO: Create fetchLocationData method
 
   private async fetchLocationData(query: string) {
-  return fetch(query)
+  const fetchLocation = await fetch(query)
  .then(response => response.json())
- .then(data => {return data})
- .catch(error => console.log(error));
+//  .then(data => {return data})
+//  .catch(error => console.log(error));
+  console.log("fetch location response: ", fetchLocation);
+  return fetchLocation;
  
 }
 // TODO: Create destructureLocationData method
   private destructureLocationData(locationData: Coordinates): Coordinates {
-    const { latitude, longitude } = locationData;
-    return { latitude, longitude };
+    const { lat, lon } = locationData;
+    return { lat, lon };
 }
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery() {
+    console.log("Inside build geocode query: ", this.cityName);
+    console.log("Inside build geocode query: ", this.apiKey);
+    console.log("Inside build geocode query: ", this.baseURL); 
   return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
  }
   // TODO: Create buildWeatherQuery method
   private buildWeatherQuery(coordinates: Coordinates): string {
-  return `${this.baseURL}/data/2.5/forecast?lat=${coordinates.latitude}&lon=${coordinates.longitude}&appid=${this.apiKey}`;
+  return `${this.baseURL}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}`;
 }
   // TODO: Create fetchAndDestructureLocationData method
   private async fetchAndDestructureLocationData() {
@@ -159,14 +116,12 @@ class WeatherService {
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
     const {list} = response;
-    const { main, weather, wind, rain } = list[0].main;
-    const currentTemp = main.temp;
-    const currentWind = wind.speed;
+    console.log("list: ", list);
+    const { temp, speed, rain, humidity } = list[0].main;
+    const currentTemp = temp;
+    const currentWind = speed;
     const precipitation = rain ? rain['1h'] : 0;
-    const humidity = main.humidity;
-    const icon = weather[0].icon;
-    const latitude = response.city.coord.lat;
-    const longitude = response.city.coord.lon;
+    const icon = list[0].weather.icon;
 
     return new Weather(
       this.cityName,
