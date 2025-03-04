@@ -13,32 +13,38 @@ interface Coordinates {
 // TODO: Define a class for the Weather object
 class Weather implements Coordinates {
   city: string; 
-  tempEl: number; 
-  precipitation: string;
+  weather: object
+  temp: number; 
+  feels_like: number;
   weatherIcon: string; 
   dateTime: Date; 
-  windEl: number;
-  humidityEl: number; 
+  wind: number;
+  humidity: number; 
+  visibility: number;
   lat: number;
   lon: number;
   
   constructor(
     city: string, 
-    tempEl: number, 
-    precipitation: string, 
+    weather: object,
+    temp: number, 
+    feels_like: number,
     weatherIcon: string, 
     dateTime: Date, 
-    windEl: number, 
-    humidityEl: number, 
+    wind: number, 
+    humidity: number, 
+    visibility: number,
     lat: number, 
     lon: number) {
     this.city = city; 
-    this.tempEl = tempEl;
-    this.precipitation = precipitation;
+    this.weather = weather;
+    this.temp = temp;
+    this.feels_like = feels_like;
     this.weatherIcon = weatherIcon; 
     this.dateTime = dateTime;
-    this.windEl = windEl; 
-    this.humidityEl = humidityEl;
+    this.wind = wind; 
+    this.humidity = humidity;
+    this.visibility = visibility;
     this.lat = lat; 
     this.lon = lon;
   }
@@ -77,8 +83,6 @@ class WeatherService {
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery() {
     console.log("Inside build geocode query: ", this.cityName);
-    console.log("Inside build geocode query: ", this.apiKey);
-    console.log("Inside build geocode query: ", this.baseURL); 
   return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
  }
   // TODO: Create buildWeatherQuery method
@@ -94,8 +98,6 @@ class WeatherService {
     }
     return this.destructureLocationData(locationDataArray[0]); 
 
-  // const coordinates = this.destructureLocationData(locationDataArray[0]);
-  // return coordinates;
   }
   // TODO: Create fetchWeatherData method
   private async fetchWeatherData(coordinates: Coordinates) {
@@ -125,14 +127,16 @@ class WeatherService {
 
     return new Weather(
       this.cityName,
-      Math.round(currentTemp),
-      precipitation ? `${Math.round(precipitation * 100) / 100} mm` : 'Sunny',
+      response.weather,
+      currentTemp,
+      response.main.feels_like,
       icon,
-      new Date(),
-      Math.round(currentWind),
-      Math.round(humidity),
-      response.locationData.latitude,
-      response.locationData.longitude  
+      new Date(response.dt * 1000),
+      currentWind,
+      humidity,
+      response.visibility,
+      response.coord.lat,
+      response.coord.lon
     );
   }
    // TODO: Complete buildForecastArray method 
@@ -141,14 +145,16 @@ class WeatherService {
     const forecasts = weatherData.list || []; 
     return forecasts.map((entry: any) => new Weather(
         this.cityName,
-        entry.tempEl,
-        entry.rain ? entry.rain['3h'] : 'No Rain',
+        entry.weather,
+        entry.main.temp,
+        entry.main.feels_like,
         entry.weather[0].icon,
         new Date(entry.dt * 1000),
         entry.wind.speed,
         entry.main.humidity,
-        weatherData.city.coord.lat,
-        weatherData.city.coord.lon
+        entry.visibility,
+        entry.coord.lat,
+        entry.coord.lon
     ));
 } 
   private parseDailyWeather(response: any) {
@@ -158,11 +164,13 @@ class WeatherService {
     }
     return response.list?.map((entry: any) => ({
       dateTime: new Date(entry.dt * 1000),
-      tempEl: entry.main.temp,
-      precipitation: entry.rain ? entry.rain['3h'] : 0,
+      temp: entry.main.temp,
+      feels_like: entry.main.feels_like,
+      description: entry.weather[0].description,
+      icon: entry.weather[0].icon,
       weatherIcon: entry.weather[0].icon,
-      windEl: entry.wind.speed,
-      humidityEl: entry.main.humidity,
+      wind: entry.wind.speed,
+      humidity: entry.main.humidity,
     })) || [];
 
 
