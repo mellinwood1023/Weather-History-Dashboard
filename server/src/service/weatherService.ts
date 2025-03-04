@@ -17,7 +17,7 @@ class Weather implements Coordinates {
   temp: number; 
   feels_like: number;
   weatherIcon: string; 
-  dateTime: Date; 
+  dt: Date; 
   wind: number;
   humidity: number; 
   rain: number;
@@ -31,7 +31,7 @@ class Weather implements Coordinates {
     temp: number, 
     feels_like: number,
     weatherIcon: string, 
-    dateTime: Date, 
+    dt: Date, 
     wind: number, 
     humidity: number, 
     rain: number,
@@ -43,7 +43,7 @@ class Weather implements Coordinates {
     this.temp = temp;
     this.feels_like = feels_like;
     this.weatherIcon = weatherIcon; 
-    this.dateTime = dateTime;
+    this.dt = dt;
     this.wind = wind; 
     this.humidity = humidity;
     this.rain = rain;
