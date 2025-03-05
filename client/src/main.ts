@@ -47,8 +47,8 @@ const fetchWeather = async (cityName: string) => {
 
   console.log('weatherData: ', weatherData);
 
-  renderCurrentWeather(weatherData[0]);
-  renderForecast(weatherData.slice(1));
+  renderCurrentWeather(weatherData.current);
+  renderForecast(weatherData.forecast);
 };
 
 const fetchSearchHistory = async () => {
@@ -77,6 +77,7 @@ Render Functions
 */
 
 const renderCurrentWeather = (currentWeather: any): void => {
+  console.log('currentWeather: ', currentWeather);
   const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
     currentWeather;
 
@@ -112,7 +113,7 @@ const renderForecast = (forecast: any): void => {
     forecastContainer.append(headingCol);
   }
 
-  for (let i = 0; i < forecast.length; i++) {
+  for (let i = 0; i < forecast.length; i+7) {
     renderForecastCard(forecast[i]);
   }
 };

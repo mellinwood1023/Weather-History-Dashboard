@@ -11,45 +11,37 @@ interface Coordinates {
   lon: number; 
 }
 // TODO: Define a class for the Weather object
-class Weather implements Coordinates {
+class Weather {
   city: string; 
-  weather: object
   temp: number; 
   feels_like: number;
   weatherIcon: string; 
-  dt: Date; 
+  dateTime: any; 
   wind: number;
   humidity: number; 
-  rain: number;
-  visibility: number;
-  lat: number;
-  lon: number;
+  description: string;
+
   
   constructor(
     city: string, 
-    weather: object,
     temp: number, 
     feels_like: number,
     weatherIcon: string, 
-    dt: Date, 
+    dateTime: any, 
     wind: number, 
     humidity: number, 
-    rain: number,
-    visibility: number,
-    lat: number, 
-    lon: number) {
+    description: string,
+
+ ) {
     this.city = city; 
-    this.weather = weather;
     this.temp = temp;
     this.feels_like = feels_like;
     this.weatherIcon = weatherIcon; 
-    this.dt = dt;
+    this.dateTime = dateTime;
     this.wind = wind; 
     this.humidity = humidity;
-    this.rain = rain;
-    this.visibility = visibility;
-    this.lat = lat; 
-    this.lon = lon;
+    this.description = description;
+
   }
 
 }
@@ -74,7 +66,7 @@ class WeatherService {
  .then(response => response.json())
 //  .then(data => {return data})
 //  .catch(error => console.log(error));
-  console.log("fetch location response: ", fetchLocation);
+  // console.log("fetch location response: ", fetchLocation);
   return fetchLocation;
  
 }
@@ -85,7 +77,7 @@ class WeatherService {
 }
   // TODO: Create buildGeocodeQuery method
   private buildGeocodeQuery() {
-    console.log("Inside build geocode query: ", this.cityName);
+    // console.log("Inside build geocode query: ", this.cityName);
   return `${this.baseURL}/geo/1.0/direct?q=${this.cityName}&limit=1&appid=${this.apiKey}`;
  }
   // TODO: Create buildWeatherQuery method
@@ -104,10 +96,10 @@ class WeatherService {
   }
   // TODO: Create fetchWeatherData method
   private async fetchWeatherData(coordinates: Coordinates) {
-  console.log(coordinates);
+  // console.log(coordinates);
   let response = await fetch(this.buildWeatherQuery(coordinates))
   let data = await response.json();
-  console.log(data);
+  // console.log(data);
   if (!data || !data.list) {
     throw new Error("Weather data not found.");
   }
@@ -121,51 +113,46 @@ class WeatherService {
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
     const {list} = response;
-    console.log("list: ", list);
+    // console.log("list: ", list);
     const { temp, speed, rain, humidity } = list[0].main;
     const currentTemp = temp;
     const currentWind = speed;
     const icon = list[0].weather[0].icon;
     const currentRain = rain;
     const currentHumidity = humidity;
-    console.log("current temp: ", currentTemp);
-    console.log("current wind: ", currentWind);
-    console.log("current rain: ", currentRain);
-    console.log("current humidity: ", currentHumidity);
+    // console.log("current temp: ", currentTemp);
+    // console.log("current wind: ", currentWind);
+    // console.log("current rain: ", currentRain);
+    // console.log("current humidity: ", currentHumidity);
 
     return new Weather(
       this.cityName,
       list[0].weather,
       currentTemp,
       list[0].main.feels_like,
+      new Date(list[0].dateTime * 1000),
       icon,
-      new Date(list[0].dt * 1000),
       currentWind,
       currentHumidity,
-      currentRain ? currentRain['1h'] : 0,
-      list[0].visibility,
-      list[0].coord.lat,
-      list[0].coord.lon
+
     );
   }
    // TODO: Complete buildForecastArray method 
   private buildForecastArray(currentWeather: Weather, weatherData: any) {
     console.log(weatherData);
-    const forecasts = weatherData.list || []; 
-    return forecasts.map((entry: any) => new Weather(
+    const forecasts = weatherData || []; 
+   return forecasts.map((entry: any) => new Weather(
         this.cityName,
-        entry.weather,
-        entry.main.temp,
-        entry.main.feels_like,
-        entry.weather[0].icon,
-        new Date(entry.dt * 1000),
-        entry.wind.speed,
-        entry.main.humidity,
-        entry.rain ? entry.rain['1h'] : 0,
-        entry.visibility,
-        entry.coord.lat,
-        entry.coord.lon
+        entry.temp,
+        entry.feels_like,
+        entry.icon,
+        new Date(entry.dateTime * 1000),
+        entry.wind,
+        entry.humidity,
+        entry.description
     ));
+    // console.log("forecast: ", forecasts);
+    // return forecasts;
 } 
   private parseDailyWeather(response: any) {
     if (!response || !response.list) {
@@ -191,7 +178,9 @@ class WeatherService {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates); 
-    const forecast = this.buildForecastArray(weatherData.current,  weatherData.daily) || []
+    console.log("weather data in get weather: ", weatherData.current, weatherData.daily);
+    const forecast = await this.buildForecastArray(weatherData.current,  weatherData.daily) || []
+    console.log("forecast: ", forecast);
     ;
 
     return {
