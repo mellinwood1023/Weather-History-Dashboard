@@ -78,9 +78,9 @@ Render Functions
 
 const renderCurrentWeather = (currentWeather: any): void => {
   console.log('currentWeather: ', currentWeather);
-  const { city, date, icon, iconDescription, tempF, windSpeed, humidity } =
+  const { city, wind: icon, iconDescription,feels_like: tempF, humidity: windSpeed, description: humidity } =
     currentWeather;
-
+  let date: any = new Date();
   // convert the following to typescript
   heading.textContent = `${city} (${date})`;
   weatherIcon.setAttribute(
@@ -113,13 +113,13 @@ const renderForecast = (forecast: any): void => {
     forecastContainer.append(headingCol);
   }
 
-  for (let i = 0; i < forecast.length; i+7) {
+  for (let i = 0; i < forecast.length; i+=8) {
     renderForecastCard(forecast[i]);
   }
 };
 
 const renderForecastCard = (forecast: any) => {
-  const { date, icon, iconDescription, tempF, windSpeed, humidity } = forecast;
+  const {dateTime: date, weatherIcon: icon, iconDescription, feels_like: tempF, wind: windSpeed, humidity } = forecast;
 
   const { col, cardTitle, weatherIcon, tempEl, windEl, humidityEl } =
     createForecastCard();
@@ -134,6 +134,8 @@ const renderForecastCard = (forecast: any) => {
   tempEl.textContent = `Temp: ${tempF} °F`;
   windEl.textContent = `Wind: ${windSpeed} MPH`;
   humidityEl.textContent = `Humidity: ${humidity} %`;
+
+
 
   if (forecastContainer) {
     forecastContainer.append(col);

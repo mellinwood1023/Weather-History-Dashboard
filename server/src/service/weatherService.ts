@@ -113,13 +113,13 @@ class WeatherService {
   // TODO: Build parseCurrentWeather method
   private parseCurrentWeather(response: any) {
     const {list} = response;
-    // console.log("list: ", list);
+    console.log("list: ", list);
     const { temp, speed, rain, humidity } = list[0].main;
     const currentTemp = temp;
-    const currentWind = speed;
+    // const currentWind = speed;
     const icon = list[0].weather[0].icon;
-    const currentRain = rain;
-    const currentHumidity = humidity;
+    // const currentRain = rain;
+    // const currentHumidity = humidity;
     // console.log("current temp: ", currentTemp);
     // console.log("current wind: ", currentWind);
     // console.log("current rain: ", currentRain);
@@ -130,23 +130,23 @@ class WeatherService {
       list[0].weather,
       currentTemp,
       list[0].main.feels_like,
-      new Date(list[0].dateTime * 1000),
+      list[0].dt_text,
       icon,
-      currentWind,
-      currentHumidity,
+      list[0].wind.speed,
+      list[0].main.humidity,
 
     );
   }
    // TODO: Complete buildForecastArray method 
   private buildForecastArray(currentWeather: Weather, weatherData: any) {
-    console.log(weatherData);
+    // console.log(weatherData);
     const forecasts = weatherData || []; 
    return forecasts.map((entry: any) => new Weather(
         this.cityName,
         entry.temp,
         entry.feels_like,
         entry.icon,
-        new Date(entry.dateTime * 1000),
+        entry.dateTime,
         entry.wind,
         entry.humidity,
         entry.description
@@ -178,9 +178,9 @@ class WeatherService {
     this.cityName = city;
     const coordinates = await this.fetchAndDestructureLocationData();
     const weatherData = await this.fetchWeatherData(coordinates); 
-    console.log("weather data in get weather: ", weatherData.current, weatherData.daily);
+    // console.log("weather data in get weather: ", weatherData.current, weatherData.daily);
     const forecast = await this.buildForecastArray(weatherData.current,  weatherData.daily) || []
-    console.log("forecast: ", forecast);
+    // console.log("forecast: ", forecast);
     ;
 
     return {
