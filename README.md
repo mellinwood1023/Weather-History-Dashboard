@@ -67,9 +67,9 @@ View real-time weather details.
 
 Manage search history by deleting previous searches.
 
-## Contributing
+## Contributions
 
-Contributions are welcome! Feel free to submit issues or pull requests.
+Special shout out to the TA's and tutors that were a huge help in this project. 
 
 ## License
 
