@@ -75,3 +75,10 @@ Special shout out to the TA's and tutors that were a huge help in this project.
 
 This project is licensed under the MIT License.
 
+## Deployment
+
+https://weather-history-dashboard.onrender.com
+
+![image](https://github.com/user-attachments/assets/35369997-8d35-43ac-8e38-9593f9933be6)
+
+
